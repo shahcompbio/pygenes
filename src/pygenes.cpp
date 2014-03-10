@@ -156,6 +156,11 @@ public:
 		{
 			lineNumber++;
 			
+			if (line.substr(0, 2) == "#!")
+			{
+				continue;
+			}
+			
 			if (line.length() == 0)
 			{
 				stringstream errorStr;
