@@ -6,13 +6,7 @@ class pygenes_test(unittest.TestCase):
 	
 	def setUp(self):
 		
-		self.gtf_url = 'ftp://ftp.ensembl.org/pub/release-54/gtf/homo_sapiens/Homo_sapiens.NCBI36.54.gtf.gz'
-		self.gtf_zip_filename = 'Homo_sapiens.NCBI36.54.gtf.gz'
-		self.gtf_filename = 'Homo_sapiens.NCBI36.54.gtf'
-
-		if not os.path.exists(self.gtf_filename):
-			os.system('wget ' + self.gtf_url)
-			os.system('gunzip ' + self.gtf_zip_filename)
+		self.gtf_filename = os.path.join(os.path.dirname(__file__), 'Homo_sapiens.NCBI36.54.test.gtf')
 	
 	def test_simple(self):
 		
