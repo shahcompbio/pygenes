@@ -12,8 +12,8 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/unordered_map.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/set.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/serialization.hpp>
@@ -28,9 +28,8 @@
 
 #include <fstream>
 #include <vector>
-
-#include "boost/serialization/unordered_map.hpp"
-#include "boost/serialization/unordered_set.hpp"
+#include <map>
+#include <set>
 
 using namespace std;
 using namespace boost;
@@ -138,7 +137,7 @@ class GeneModels
 public:
 	void LoadEnsemblGTF(const string& gtfFilename)
 	{
-		unordered_map<string, accumulators::accumulator_set<int, accumulators::stats<accumulators::tag::min, accumulators::tag::max > > > geneRegionAcc;
+		map<string, accumulators::accumulator_set<int, accumulators::stats<accumulators::tag::min, accumulators::tag::max > > > geneRegionAcc;
 		
 		// Open clusters file
 		ifstream gtfFile(gtfFilename.c_str());
@@ -258,9 +257,9 @@ public:
 			}
 		}
 		
-		unordered_map<string,vector<Interval<string> > > geneIntervals;
+		map<string,vector<Interval<string> > > geneIntervals;
 		
-		for (unordered_map<string,Gene>::const_iterator geneIter = mGenes.begin(); geneIter != mGenes.end(); geneIter++)
+		for (map<string,Gene>::const_iterator geneIter = mGenes.begin(); geneIter != mGenes.end(); geneIter++)
 		{
 			const string geneID = geneIter->first;
 			
@@ -274,12 +273,12 @@ public:
 		}
 		
 		mGeneIntervalTrees.clear();
-		for (unordered_map<string,vector<Interval<string> > >::iterator chromosomeIter = geneIntervals.begin(); chromosomeIter != geneIntervals.end(); chromosomeIter++)
+		for (map<string,vector<Interval<string> > >::iterator chromosomeIter = geneIntervals.begin(); chromosomeIter != geneIntervals.end(); chromosomeIter++)
 		{
 			mGeneIntervalTrees[chromosomeIter->first] = IntervalTree<string>(chromosomeIter->second);
 		}
 		
-		for (unordered_map<string,vector<Region> >::iterator exonsIter = mExons.begin(); exonsIter != mExons.end(); exonsIter++)
+		for (map<string,vector<Region> >::iterator exonsIter = mExons.begin(); exonsIter != mExons.end(); exonsIter++)
 		{
 			sort(exonsIter->second.begin(), exonsIter->second.end());
 			
@@ -291,7 +290,7 @@ public:
 			mTranscriptLength[exonsIter->first] = length;
 		}
 		
-		for (unordered_map<string,vector<Region> >::iterator cdssIter = mCDSs.begin(); cdssIter != mCDSs.end(); cdssIter++)
+		for (map<string,vector<Region> >::iterator cdssIter = mCDSs.begin(); cdssIter != mCDSs.end(); cdssIter++)
 		{
 			sort(cdssIter->second.begin(), cdssIter->second.end());
 		}
@@ -375,7 +374,7 @@ public:
 		bool cds = false;
 		bool utr5p = false;
 		bool utr3p = false;
-		for (unordered_set<string>::const_iterator transcriptIter = mGeneTranscripts[geneID].begin(); transcriptIter != mGeneTranscripts[geneID].end(); transcriptIter++)
+		for (set<string>::const_iterator transcriptIter = mGeneTranscripts[geneID].begin(); transcriptIter != mGeneTranscripts[geneID].end(); transcriptIter++)
 		{
 			const string& transcriptID = *transcriptIter;
 			
@@ -541,15 +540,15 @@ public:
 	}
 	
 private:
-	unordered_map<string,Gene> mGenes;
-	unordered_map<string,unordered_set<string> > mGeneTranscripts;
-	unordered_map<string,string> mTranscriptGene;
-	unordered_map<string,int> mTranscriptLength;
-	unordered_map<string,vector<Region> > mExons;
-	unordered_map<string,vector<Region> > mCDSs;
-	unordered_map<string,Region> mStartCodon;
-	unordered_map<string,Region> mStopCodon;
-	unordered_map<string,IntervalTree<string> > mGeneIntervalTrees;
+	map<string,Gene> mGenes;
+	map<string,set<string> > mGeneTranscripts;
+	map<string,string> mTranscriptGene;
+	map<string,int> mTranscriptLength;
+	map<string,vector<Region> > mExons;
+	map<string,vector<Region> > mCDSs;
+	map<string,Region> mStartCodon;
+	map<string,Region> mStopCodon;
+	map<string,IntervalTree<string> > mGeneIntervalTrees;
 };
 
 BOOST_CLASS_VERSION(GeneModels, 1)
