@@ -13,7 +13,6 @@ ext_modules = [
 
 setup(
     name='pygenes',
-    packages=['pygenes'],
     version='0.0.1',
     description='On-disk gene database searchable using an interval tree',
     author='Andrew McPherson',

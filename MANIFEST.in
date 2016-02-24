@@ -1,0 +1,6 @@
+include LICENSE.TXT
+include README.md
+include setup.cfg
+include setup.py
+recursive-include src
+recursive-include tests
