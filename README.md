@@ -1,6 +1,6 @@
 # PyGenes
 
-PyGenes is an on disk searchable gene database for python, implemented in c++ for speed.  The current implementation is primarily aimed at providing an interface for ensembl gtf files.
+PyGenes is an in memory searchable gene database for python, implemented in c++ for speed.  The current implementation is primarily aimed at providing an interface for ensembl gtf files.
 
 ## Usage
 

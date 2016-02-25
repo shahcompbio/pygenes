@@ -50,7 +50,7 @@ ext_modules = [
 setup(
     name='pygenes',
     version='0.0.3',
-    description='On-disk gene database searchable using an interval tree',
+    description='In memory gene database searchable using an interval tree',
     author='Andrew McPherson',
     author_email='andrew.mcpherson@gmail.com',
     url='http://bitbucket.org/dranew/pygenes',
