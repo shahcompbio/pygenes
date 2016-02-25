@@ -1,0 +1,20 @@
+package:
+  name: pygenes
+  version: "0.0.4"
+
+source:
+  fn: pygenes-0.0.4.tar.gz
+  url: https://bitbucket.org/dranew/pygenes/get/v0.0.4.tar.gz
+
+requirements:
+  build:
+    - python
+
+  run:
+    - python
+
+about:
+  home: http://bitbucket.org/dranew/pygenes
+  license: MIT
+  summary: 'In memory gene database searchable using an interval tree'
+
