@@ -9,6 +9,7 @@ source:
 requirements:
   build:
     - python
+    - boost_source ==1.60.0
 
   run:
     - python
@@ -17,4 +18,5 @@ about:
   home: http://bitbucket.org/dranew/pygenes
   license: MIT
   summary: 'In memory gene database searchable using an interval tree'
+
 
