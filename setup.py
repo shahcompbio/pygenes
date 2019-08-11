@@ -1,8 +1,6 @@
-import fnmatch
-import os
-import sys
 import platform
-import argparse
+import versioneer
+
 
 from distutils.core import setup
 from distutils.extension import Extension
@@ -29,12 +27,11 @@ ext_modules = [
 
 setup(
     name='pygenes',
-    version='0.0.3',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='In memory gene database searchable using an interval tree',
     author='Andrew McPherson',
     author_email='andrew.mcpherson@gmail.com',
-    url='http://bitbucket.org/dranew/pygenes',
-    download_url='https://bitbucket.org/dranew/pygenes/get/v0.0.3.tar.gz',
     keywords=['bioinformatics'],
     classifiers=[],
     ext_modules=ext_modules,
