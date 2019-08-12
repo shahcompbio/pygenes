@@ -6,54 +6,43 @@
 #include <iostream>
 #include <limits>
 
-#include <boost/serialization/serialization.hpp>
-
 using namespace std;
-using namespace boost;
 
 
 template <class T>
-class Interval
+class CInterval
 {
 public:
 	int start;
 	int stop;
 	T value;
-	Interval(int s, int e, const T& v) : start(s), stop(e), value(v) {}
-	Interval() : start(0), stop(0) {}
-	
-	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
-	{
-		ar & start;
-		ar & stop;
-		ar & value;
-	}
+	CInterval(int s, int e, const T& v) : start(s), stop(e), value(v) {}
+	CInterval() : start(0), stop(0) {}
 };
 
 template <class T>
-bool StartCmp(const Interval<T>& a, const Interval<T>& b)
+bool StartCmp(const CInterval<T>& a, const CInterval<T>& b)
 {
 	return a.start < b.start;
 }
 
 template <class T>
-bool StopCmp(const Interval<T>& a, const Interval<T>& b)
+bool StopCmp(const CInterval<T>& a, const CInterval<T>& b)
 {
 	return a.stop < b.stop;
 }
 
 template <class T>
-ostream& operator<<(ostream& out, const Interval<T>& i)
+ostream& operator<<(ostream& out, const CInterval<T>& i)
 {
-	out << "Interval(" << i.start << ", " << i.stop << "): " << i.value;
+	out << "CInterval(" << i.start << ", " << i.stop << "): " << i.value;
 	return out;
 }
 
 template <class T>
-ostream& operator<<(ostream& out, const vector<Interval<T> >& intervals)
+ostream& operator<<(ostream& out, const vector<CInterval<T> >& intervals)
 {
-	for (typename vector<Interval<T> >::const_iterator intervalIter = intervals.begin(); intervalIter != intervals.end(); intervalIter++)
+	for (typename vector<CInterval<T> >::const_iterator intervalIter = intervals.begin(); intervalIter != intervals.end(); intervalIter++)
 	{
 		out << *intervalIter << endl;
 	}
@@ -91,12 +80,12 @@ private:
 };
 
 template <class T>
-class IntervalTree
+class CIntervalTree
 {
 public:
-	IntervalTree<T>() : mLeft(0), mRight(0), mCenter(0) {}
+	CIntervalTree<T>() : mLeft(0), mRight(0), mCenter(0) {}
 	
-	IntervalTree<T>(const IntervalTree<T>& other)
+	CIntervalTree<T>(const CIntervalTree<T>& other)
 	{
 		mCenter = other.mCenter;
 		
@@ -104,7 +93,7 @@ public:
 		
 		if (other.mLeft)
 		{
-			mLeft = new IntervalTree<T>(*other.mLeft);
+			mLeft = new CIntervalTree<T>(*other.mLeft);
 		}
 		else
 		{
@@ -113,7 +102,7 @@ public:
 		
 		if (other.mRight)
 		{
-			mRight = new IntervalTree<T>(*other.mRight);
+			mRight = new CIntervalTree<T>(*other.mRight);
 		}
 		else
 		{
@@ -121,7 +110,7 @@ public:
 		}
 	}
 	
-	IntervalTree<T>& operator=(const IntervalTree<T>& other)
+	CIntervalTree<T>& operator=(const CIntervalTree<T>& other)
 	{
 		mCenter = other.mCenter;
 		
@@ -130,7 +119,7 @@ public:
 		delete mLeft;
 		if (other.mLeft)
 		{
-			mLeft = new IntervalTree<T>(*other.mLeft);
+			mLeft = new CIntervalTree<T>(*other.mLeft);
 		}
 		else
 		{
@@ -140,7 +129,7 @@ public:
 		delete mRight;
 		if (other.mRight)
 		{
-			mRight = new IntervalTree<T>(*other.mRight);
+			mRight = new CIntervalTree<T>(*other.mRight);
 		}
 		else
 		{
@@ -150,7 +139,7 @@ public:
 		return *this;
 	}
 	
-	IntervalTree<T>(vector<Interval<T> >& intervals, 
+	CIntervalTree<T>(vector<CInterval<T> >& intervals, 
 					unsigned int maxdepth = 16,
 					unsigned int minbucket = 64,
 					unsigned int maxbucket = 512)
@@ -168,7 +157,7 @@ public:
 	{
 		if (stop >= mIntervals.front().start)
 		{
-			for (typename vector<Interval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
+			for (typename vector<CInterval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
 			{
 				if (intervalIter->stop >= start && intervalIter->start <= stop)
 				{
@@ -192,7 +181,7 @@ public:
 	{
 		if (stop >= mIntervals.front().start)
 		{
-			for (typename vector<Interval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
+			for (typename vector<CInterval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
 			{
 				if (intervalIter->start >= start && intervalIter->stop <= stop)
 				{
@@ -220,23 +209,14 @@ public:
 		nearest.insert(nearest.end(), nearestAccumulator.Get().begin(), nearestAccumulator.Get().end());
 	}
 	
-	~IntervalTree()
+	~CIntervalTree()
 	{
 		delete mLeft;
 		delete mRight;
 	}
 	
-	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
-	{
-		ar & mIntervals;
-		ar & mLeft;
-		ar & mRight;
-		ar & mCenter;
-	}
-	
 private:
-	IntervalTree<T>(vector<Interval<T> >& intervals, 
+	CIntervalTree<T>(vector<CInterval<T> >& intervals, 
 					unsigned int maxdepth,
 					unsigned int minbucket,
 					unsigned int maxbucket,
@@ -247,7 +227,7 @@ private:
 		Construct(intervals, maxdepth, minbucket, maxbucket, leftextent, rightextent);
 	}
 	
-	void Construct(vector<Interval<T> >& intervals, unsigned int depth, unsigned int minbucket,
+	void Construct(vector<CInterval<T> >& intervals, unsigned int depth, unsigned int minbucket,
 				   unsigned int maxbucket, int leftextent, int rightextent)
 	{
 		if (depth == 1 || (intervals.size() < minbucket && intervals.size() < maxbucket))
@@ -258,12 +238,12 @@ private:
 		{
 			mCenter = intervals.at(intervals.size() / 2).start;
 			
-			vector<Interval<T> > lefts;
-			vector<Interval<T> > rights;
+			vector<CInterval<T> > lefts;
+			vector<CInterval<T> > rights;
 			
-			for (typename vector<Interval<T> >::iterator i = intervals.begin(); i != intervals.end(); ++i)
+			for (typename vector<CInterval<T> >::iterator i = intervals.begin(); i != intervals.end(); ++i)
 			{
-				Interval<T>& interval = *i;
+				CInterval<T>& interval = *i;
 				if (interval.stop < mCenter)
 				{
 					lefts.push_back(interval);
@@ -280,18 +260,18 @@ private:
 			
 			if (!lefts.empty())
 			{
-				mLeft = new IntervalTree<T>(lefts, depth - 1, minbucket, maxbucket, leftextent, mCenter);
+				mLeft = new CIntervalTree<T>(lefts, depth - 1, minbucket, maxbucket, leftextent, mCenter);
 			}
 			if (!rights.empty())
 			{
-				mRight = new IntervalTree<T>(rights, depth - 1, minbucket, maxbucket, mCenter, rightextent);
+				mRight = new CIntervalTree<T>(rights, depth - 1, minbucket, maxbucket, mCenter, rightextent);
 			}
 		}
 	}
 	
 	void FindNearest(int position, NearestAccumulator<T>& nearest) const
 	{
-		for (typename vector<Interval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
+		for (typename vector<CInterval<T> >::const_iterator intervalIter = mIntervals.begin(); intervalIter != mIntervals.end(); intervalIter++)
 		{
 			if (position < intervalIter->start)
 			{
@@ -318,9 +298,9 @@ private:
 		}
 	}
 	
-	vector<Interval<T> > mIntervals;
-	IntervalTree<T>* mLeft;
-	IntervalTree<T>* mRight;
+	vector<CInterval<T> > mIntervals;
+	CIntervalTree<T>* mLeft;
+	CIntervalTree<T>* mRight;
 	int mCenter;
 };
 

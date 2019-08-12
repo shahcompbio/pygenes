@@ -13,10 +13,6 @@ class pygenes_test(unittest.TestCase):
         
         gene_models = pygenes.GeneModels()
         gene_models.load_ensembl_gtf(self.gtf_filename)
-        gene_models.save_binary('gene_models.binary')
-        
-        gene_models = pygenes.GeneModels()
-        gene_models.load_binary('gene_models.binary')
         
         gene = gene_models.get_gene('ENSG00000101596')
         self.assertEqual(gene.id, 'ENSG00000101596')
