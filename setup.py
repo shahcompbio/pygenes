@@ -1,34 +1,33 @@
+import os
 import platform
 import versioneer
 
 from setuptools import setup, find_packages, Extension
-from Cython.Build import cythonize
 
-extra_compile_args = ['-Wno-unused-variable']
-if platform.platform().startswith('Darwin'):
-    extra_compile_args.append('-Wno-unneeded-internal-declaration')
-    extra_compile_args.append('-Wno-unused-private-field')
-    extra_compile_args.append('-stdlib=libc++')
-    extra_compile_args.append('-mmacosx-version-min=10.9')
 
-extra_compile_args.append('-ftemplate-depth-1024')
+if not os.path.exists('pygenes/pygenes.cpp'):
+    from Cython.Build import cythonize
 
-extra_link_args = []
-if platform.platform().startswith('Darwin'):
-    extra_link_args.append('-Wl,-no_compact_unwind')
-    extra_link_args.append('-stdlib=libc++')
-    extra_link_args.append('-mmacosx-version-min=10.9')
+    extensions = [
+        Extension(
+            'pygenes',
+            ['pygenes/pygenes.pyx'],
+            language='c++',
+            include_dirs=['src'],
+        ),
+    ]
 
-extensions = [
-    Extension(
-        'pygenes',
-        ['pygenes/pygenes.pyx'],
-        language='c++',
-        include_dirs=['src'],
-        extra_compile_args=extra_compile_args,
-        extra_link_args=extra_link_args,
-    ),
-]
+    extensions = cythonize(extensions)
+
+else:
+    extensions = [
+        Extension(
+            'pygenes',
+            ['pygenes/pygenes.cpp'],
+            language='c++',
+            include_dirs=['src'],
+        ),
+    ]
 
 setup(
     name='pygenes',
@@ -39,6 +38,6 @@ setup(
     author_email='andrew.mcpherson@gmail.com',
     keywords=['bioinformatics'],
     classifiers=[],
-    ext_modules=cythonize(extensions),
+    ext_modules=extensions,
 )
 
