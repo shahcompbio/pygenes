@@ -1,9 +1,19 @@
 import os
+import sys
 import platform
 import versioneer
 
 from setuptools import setup, find_packages, Extension
 
+
+libraries = []
+extra_compile_args = ['-g']
+extra_link_args = ['-g']
+if 'linux' in sys.platform:
+    libraries.append('rt')
+elif sys.platform == 'darwin':
+    extra_compile_args.extend(['-stdlib=libc++'])
+    extra_link_args.extend(['-stdlib=libc++', '-mmacosx-version-min=10.9'])
 
 if not os.path.exists('pygenes/pygenes.cpp'):
     from Cython.Build import cythonize
@@ -14,6 +24,8 @@ if not os.path.exists('pygenes/pygenes.cpp'):
             ['pygenes/pygenes.pyx'],
             language='c++',
             include_dirs=['src'],
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
         ),
     ]
 
@@ -26,6 +38,8 @@ else:
             ['pygenes/pygenes.cpp'],
             language='c++',
             include_dirs=['src'],
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
         ),
     ]
 
