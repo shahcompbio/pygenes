@@ -1,21 +1,27 @@
 package:
   name: pygenes
-  version: "0.0.4"
+  version: "0.0.5"
 
 source:
-  fn: pygenes-0.0.4.tar.gz
-  url: https://bitbucket.org/dranew/pygenes/get/v0.0.4.tar.gz
+  git_url: git://github.com/shahcompbio/pygenes.git
+  git_rev: v0.0.5
+
+build:
+  number: 1
 
 requirements:
   build:
     - python
-    - boost_source ==1.60.0
 
   run:
     - python
 
+test:
+  requires:
+    - nose
+
 about:
-  home: http://bitbucket.org/dranew/pygenes
+  home: https://github.com/shahcompbio/pygenes
   license: MIT
   summary: 'In memory gene database searchable using an interval tree'
 
